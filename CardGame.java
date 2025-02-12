@@ -1,3 +1,4 @@
+// hi
 package cardGame;
 
 import java.io.File;
@@ -7,6 +8,7 @@ import java.util.Scanner;
 
 public class CardGame {
 
+	// declaring and initializing array lists
 	private static ArrayList<Card> deckOfCards = new ArrayList<Card>();
 	private static ArrayList<Card> playerCards = new ArrayList<Card>();
 
