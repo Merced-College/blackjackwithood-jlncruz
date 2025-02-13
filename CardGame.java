@@ -24,35 +24,35 @@ public class CardGame {
 			e.printStackTrace();
 		}
 
-		while(input.hasNext()) {
+		while (input.hasNext()) {
 			String[] fields  = input.nextLine().split(",");
 			//	public Card(String cardSuit, String cardName, int cardValue, String cardPicture) {
 			Card newCard = new Card(fields[0], fields[1].trim(),
 					Integer.parseInt(fields[2].trim()), fields[3]);
-			deckOfCards.add(newCard);	
+			deckOfCards.add(newCard);
 		}
 
 		shuffle();
 
-		//for(Card c: deckOfCards)
+		// for(Card c: deckOfCards)
 			//System.out.println(c);
 
-		//deal the player 5 cards
+		// deal the player 5 cards
 		for(int i = 0; i < 4; i++) {
 			playerCards.add(deckOfCards.remove(i));
 		}
-		
-		System.out.println("players cards");
+
+		System.out.println("Players cards");
 		for(Card c: playerCards)
 			System.out.println(c);
 
-		System.out.println("pairs is " + checkFor2Kind());
+		System.out.println("Pairs is " + checkFor2Kind());
 
-	}//end main
+	} // end main
 
 	public static void shuffle() {
 
-		//shuffling the cards by deleting and reinserting
+		// shuffling the cards by deleting and reinserting
 		for (int i = 0; i < deckOfCards.size(); i++) {
 			int index = (int) (Math.random()*deckOfCards.size());
 			Card c = deckOfCards.remove(index);
@@ -61,25 +61,24 @@ public class CardGame {
 		}
 	}
 
-	//check for 2 of a kind in the players hand
+	// check for two of a kind in the players hand
 	public static boolean checkFor2Kind() {
 
 		int count = 0;
 		for(int i = 0; i < playerCards.size() - 1; i++) {
 			Card current = playerCards.get(i);
 			Card next = playerCards.get(i+1);
-			
+
 			for(int j = i+1; j < playerCards.size(); j++) {
 				next = playerCards.get(j);
 				//System.out.println(" comparing " + current);
 				//System.out.println(" to " + next);
 				if(current.equals(next))
 					count++;
-			}//end of inner for
+			} // end of inner for loop
 			if(count == 1)
 				return true;
-
-		}//end outer for
+		} // end outer for loop
 		return false;
 	}
 }//end class
