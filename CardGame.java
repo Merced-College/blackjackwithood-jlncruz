@@ -1,4 +1,5 @@
-// hi
+// Reem Amro, Aaron Liang, Julia Pedregon, Jose Cruz
+
 package cardGame;
 
 import java.io.File;
@@ -6,27 +7,23 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CardGame {
-
-	// declaring and initializing array lists
-	private static ArrayList<Card> deckOfCards = new ArrayList<Card>();
-	private static ArrayList<Card> playerCards = new ArrayList<Card>();
-
+class CardGame {
+	private static ArrayList<Card> deckOfCards = new ArrayList<>();
+	private static ArrayList<Card> playerCards = new ArrayList<>();
+	private static int playerScore = 0;
 
 	public static void main(String[] args) {
-
 		Scanner input = null;
 		try {
 			input = new Scanner(new File("cards.txt"));
 		} catch (FileNotFoundException e) {
-			// error
-			System.out.println("error");
+			System.out.println("Error reading cards file");
 			e.printStackTrace();
+			return;
 		}
 
-		while (input.hasNext()) {
-			String[] fields  = input.nextLine().split(",");
-			//	public Card(String cardSuit, String cardName, int cardValue, String cardPicture) {
+		while(input.hasNext()) {
+			String[] fields = input.nextLine().split(",");
 			Card newCard = new Card(fields[0], fields[1].trim(),
 					Integer.parseInt(fields[2].trim()), fields[3]);
 			deckOfCards.add(newCard);
@@ -34,51 +31,55 @@ public class CardGame {
 
 		shuffle();
 
-		// for(Card c: deckOfCards)
-			//System.out.println(c);
-
-		// deal the player 5 cards
-		for(int i = 0; i < 4; i++) {
-			playerCards.add(deckOfCards.remove(i));
+		for(int i = 0; i < 5; i++) {
+			playerCards.add(deckOfCards.remove(0));
 		}
 
-		System.out.println("Players cards");
+		System.out.println("Your cards:");
 		for(Card c: playerCards)
 			System.out.println(c);
-
-		System.out.println("Pairs is " + checkFor2Kind());
-
-	} // end main
+		calculateScore();
+		System.out.println("Final Score: " + playerScore);
+	}
 
 	public static void shuffle() {
-
-		// shuffling the cards by deleting and reinserting
 		for (int i = 0; i < deckOfCards.size(); i++) {
 			int index = (int) (Math.random()*deckOfCards.size());
 			Card c = deckOfCards.remove(index);
-			//System.out.println("c is " + c + ", index is " + index);
 			deckOfCards.add(c);
 		}
 	}
 
-	// check for two of a kind in the players hand
 	public static boolean checkFor2Kind() {
-
-		int count = 0;
 		for(int i = 0; i < playerCards.size() - 1; i++) {
 			Card current = playerCards.get(i);
-			Card next = playerCards.get(i+1);
-
 			for(int j = i+1; j < playerCards.size(); j++) {
-				next = playerCards.get(j);
-				//System.out.println(" comparing " + current);
-				//System.out.println(" to " + next);
-				if(current.equals(next))
-					count++;
-			} // end of inner for loop
-			if(count == 1)
-				return true;
-		} // end outer for loop
+				Card next = playerCards.get(j);
+				if(current.getValue() == next.getValue()) {
+					System.out.println("Found pair: " + current.getName() + " and " + next.getName());
+					return true;
+				}
+			}
+		}
 		return false;
 	}
-}//end class
+
+	public static void calculateScore() {
+		playerScore = 0;
+		if(checkFor2Kind()) {
+			playerScore += 2;
+			System.out.println("Found a pair! +2 points");
+		}
+
+		for(Card card : playerCards) {
+			if (card.getValue() >= 10) {
+				playerScore += 1;
+				System.out.println("High card: " + card.getName() + " (+1 point)");
+			}
+		}
+
+		if (playerScore == 0) {
+			System.out.println("No points scored this hand.");
+		}
+	}
+}
